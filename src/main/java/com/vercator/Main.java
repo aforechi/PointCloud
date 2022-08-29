@@ -30,8 +30,9 @@ public class Main {
         mountPipelineOfTransformations();
         try {
             Matrix pointCloudInput = MatrixFile.readFile(inputFile);
-            Matrix pointCloudOutput = filters.execute(pointCloudInput);
-            MatrixFile.writeFile(outputFile, pointCloudOutput);
+            Matrix pointCloudMean = pointCloudInput.meanOfRowValues();
+            Matrix pointCloudOutput = filters.execute(pointCloudInput.subtract(pointCloudMean));
+            MatrixFile.writeFile(outputFile, pointCloudOutput.add(pointCloudMean));
             System.out.println("Point Cloud was successfully written to the specified file.");
         }
         catch (FileNotFoundException e) {

@@ -123,6 +123,55 @@ public class Matrix {
     }
 
     /**
+     * Subtract the values of B from this matrix row-wise. Columns must agree!
+     * @param B is a row-vector with same number of columns as this matrix
+     * @return a new matrix subtracted B values from each row
+     */
+    public Matrix subtract(Matrix B){
+        if (this.getColumns() != B.getColumns())
+            throw new RuntimeException("Matrices columns do not agree");
+        Matrix output = new Matrix(this.data);
+        for(int i=0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getColumns(); j++) {
+                output.data[i][j] -= B.data[0][j];
+            }
+        }
+        return output;
+    }
+
+    /**
+     * Add the values of B to this matrix row-wise. Columns must agree!
+     * @param B is a row-vector with same number of columns as this matrix
+     * @return a new matrix added by B values in each row
+     */
+    public Matrix add(Matrix B){
+        if (this.getColumns() != B.getColumns())
+            throw new RuntimeException("Matrices columns do not agree");
+        Matrix output = new Matrix(this.data);
+        for(int i=0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getColumns(); j++) {
+                output.data[i][j] += B.data[0][j];
+            }
+        }
+        return output;
+    }
+
+    /**
+     * Compute the mean row-wise preserving columns
+     * @return a row-vector with the mean of the original rows for each column
+     */
+    public Matrix meanOfRowValues(){
+        Matrix mean = new Matrix(1, getColumns());
+        for(int j=0; j<getColumns(); j++){
+            for(int i=0; i<getRows(); i++){
+                mean.data[0][j] += this.data[i][j];
+            }
+            mean.data[0][j] /= getRows();
+        }
+        return mean;
+    }
+
+    /**
      * Transpose Operation
      * @return a matrix with transposed rows and columns
      */
