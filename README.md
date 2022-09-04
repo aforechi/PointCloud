@@ -52,6 +52,7 @@ javac *.java
 - Run:
 ```
 cd ./PointCloud/
+mvn exec:java -Dexec.mainClass="com.vercator.Main" --input ./data/armadillo.xyz --output ./data/armadillo_rz_45.xyz --angles 0 0 -45
 java -cp src/main/java com.vercator.Main --input ./data/armadillo.xyz --output ./data/armadillo_rz_45.xyz --angles 0 0 -45
 ```
 

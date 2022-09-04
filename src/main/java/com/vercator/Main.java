@@ -1,5 +1,8 @@
 package com.vercator;
 
+import nu.pattern.OpenCV;
+import org.opencv.core.Core;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ public class Main {
     static final String USAGE_MESSAGE = "\n --input ./data/armadillo.xyz --output ./data/armadillo_rz_45.xyz --angles 0 0 -45";
 
     /**
+     * TODO: Create a Java Applet for the user (Product Owner)
      * The main function does:
      *  - Load a point cloud file with containing one 3D point per line. Each point is represented by x y z coordinates separated by spaces
      *  - Remove the current rotation, so the vertical axis of its body is aligned with the Y axis.
@@ -26,6 +30,7 @@ public class Main {
      * @param args command line arguments
      */
     public static void main(String[] args) {
+        OpenCV.loadLocally();
         parseCommandLineArguments(args);
         mountPipelineOfTransformations();
         try {
