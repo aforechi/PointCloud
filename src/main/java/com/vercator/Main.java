@@ -14,11 +14,11 @@ import java.util.Map;
  * Main Program Class
  */
 public class Main {
-    static Pipeline filters;
+    static boolean flipUpsideDown;
     static String inputFile;
     static String outputFile;
     static final Map<String, List<String>> params = new HashMap<>();
-    static final String USAGE_MESSAGE = "\n --input ./data/armadillo.xyz --output ./data/armadillo_rz_45.xyz --angles 0 0 -45";
+    static final String USAGE_MESSAGE = "\n --input ./data/armadillo.xyz --output ./data/armadillo_out.xyz --flip 0";
 
     /**
      * TODO: Create a Java Applet for the user (Product Owner)
@@ -32,12 +32,10 @@ public class Main {
     public static void main(String[] args) {
         OpenCV.loadLocally();
         parseCommandLineArguments(args);
-        mountPipelineOfTransformations();
         try {
             Matrix pointCloudInput = MatrixFile.readFile(inputFile);
-            Matrix pointCloudMean = pointCloudInput.meanOfRowValues();
-            Matrix pointCloudOutput = filters.execute(pointCloudInput.subtract(pointCloudMean));
-            MatrixFile.writeFile(outputFile, pointCloudOutput.add(pointCloudMean));
+            Matrix pointCloudOutput = pointCloudInput.rotate(flipUpsideDown);
+            MatrixFile.writeFile(outputFile, pointCloudOutput);
             System.out.println("Point Cloud was successfully written to the specified file.");
         }
         catch (FileNotFoundException e) {
@@ -46,34 +44,6 @@ public class Main {
         catch (IOException e) {
             System.err.println("Failed to save Point Cloud to the specified file.");
         }
-    }
-
-    /**
-     * Mount the pipeline of matrix transformation according to the parametrised angles
-     */
-    private static void mountPipelineOfTransformations() {
-        filters = new Pipeline(new Transpose()).addHandler(new AddRowAtTheEnd(1));
-
-        if (params.get("angles").size() >= 1) {
-            double angle = Double.parseDouble(params.get("angles").get(0));
-            if (angle != 0) {
-                filters = filters.addHandler(new RotateX(angle));
-            }
-        }
-        if (params.get("angles").size() >= 2) {
-            double angle = Double.parseDouble(params.get("angles").get(1));
-            if (angle != 0) {
-                filters = filters.addHandler(new RotateY(angle));
-            }
-        }
-        if (params.get("angles").size() >= 3) {
-            double angle = Double.parseDouble(params.get("angles").get(2));
-            if (angle != 0) {
-                filters = filters.addHandler(new RotateZ(angle));
-            }
-        }
-
-        filters = filters.addHandler(new DelRowAtTheEnd()).addHandler(new Transpose());
     }
 
     /**
@@ -108,6 +78,16 @@ public class Main {
 
         inputFile = params.get("input").get(0);
         outputFile = params.get("output").get(0);
-
+        if (params.get("flip") != null && params.get("flip").size() >= 1) {
+            if ("1".equals(params.get("flip").get(0))) {
+                flipUpsideDown = true;
+            }
+            else {
+                flipUpsideDown = false;
+            }
+        }
+        else {
+            flipUpsideDown = false;
+        }
     }
 }

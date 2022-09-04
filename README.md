@@ -40,6 +40,7 @@ For more details please find the Javadoc generated files [here](doc/index.html).
 - Java 10
 - JUnit 5
 - Maven 4
+- OpenCV 4
 
 ## Usage
 
@@ -63,7 +64,7 @@ This project has demonstrated the capability of reading a point cloud to memory 
 
 This project could be employed in conjunction with another project that detects objects in point clouds and automatically determine the rotation of the body w.r.t. the vertical axis y. The segmentation of point clouds could be investigated using Deep Learning algorithms and the orientation angle of the object could be determined by Principal Component Analysis (PCA).
 
-In the PCA method, the biggest eigenvector aligns with the axis where the points are widely spread. There are many applications of this technique in Computer Vision, but cite one that might be relevant for removing pedestrian trace from point cloud data I would suggest reading this [paper](http://www.ijmerr.com/uploadfile/2020/0417/20200417064018858.pdf). 
+In the PCA method, the biggest eigenvector aligns with the axis where the points are widely spread. There are many applications of this technique in Computer Vision, but cite one that might be relevant for removing pedestrian trace from point cloud data I would suggest reading this [paper](http://www.ijmerr.com/uploadfile/2020/0417/20200417064018858.pdf). Eigenvectors computed by PCA are not uniquely defined due to sign ambiguity. PCA supports fast ad-hoc “sign flip” technique described in the paper [Bro07](https://www.osti.gov/servlets/purl/920802).
 
 This project has demonstrated the relevance of linear algebra for solving real world problems and the importance of OO Programming and Design Patterns towards the motto "Coding for Humanity" as my former advisor used to say.
 

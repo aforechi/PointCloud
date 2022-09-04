@@ -1,15 +1,20 @@
 package com.vercator;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.opencv.core.CvType.*;
+
 /**
  * Simplified matrix class for handling point cloud transformations
  */
 public class Matrix {
-    private final double[][] data;
+    private final Mat data;
 
     /**
      * Create a matrix of shape (rows, columns) and initializes the elements to the specified value.
@@ -20,10 +25,10 @@ public class Matrix {
      * @param value initial value
      */
     public Matrix(int rows, int cols, double value) {
-        data = new double[rows][cols];
+        data = new Mat(rows, cols, CV_64FC1);
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++) {
-                data[i][j] = value;
+                data.put(i, j, value);
             }
         }
     }
@@ -46,10 +51,10 @@ public class Matrix {
     public Matrix(double[][] values) {
         int rows = values.length;
         int cols = values[0].length;
-        data = new double[rows][cols];
+        data = new Mat(rows, cols, CV_64FC1);
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++) {
-                data[i][j] = values[i][j];
+                data.put(i, j, values[i][j]);
             }
         }
     }
@@ -68,10 +73,10 @@ public class Matrix {
         }
         int rows = doubleArray.size();
         int cols = doubleArray.get(0).size();
-        data = new double[rows][cols];
+        data = new Mat(rows, cols, CV_64FC1);
         for (int i=0; i < doubleArray.size(); i++) {
             for (int j=0; j < doubleArray.get(i).size(); j++) {
-                data[i][j] = doubleArray.get(i).get(j);
+                data.put(i, j, doubleArray.get(i).get(j));
             }
         }
     }
@@ -81,7 +86,7 @@ public class Matrix {
      * @return the size of first dimension
      */
     public int getRows() {
-        return data.length;
+        return data.rows();
     }
 
     /**
@@ -89,7 +94,7 @@ public class Matrix {
      * @return the size of second dimension
      */
     public int getColumns() {
-        return data[0].length;
+        return data.cols();
     }
 
     /**
@@ -98,120 +103,12 @@ public class Matrix {
      * @return an array of doubles with the elements in the specified row
      */
     public double[] getRowVector(int row) {
-        return data[row];
-    }
-
-    /**
-     * Matrix-Matrix product A.B=C
-     * Multiply the matrix A (this) by B.
-     * A (this) is a n by k matrix
-     * @param B is a k by m matrix
-     * @return the resulting n by m matrix C
-     */
-    public Matrix multiply(Matrix B){
-        if (this.getColumns() != B.getRows())
-            throw new RuntimeException("Matrices dimensions do not agree");
-        Matrix C = new Matrix(this.getRows(), B.getColumns());
-        for(int i=0; i<C.getRows(); i++){
-            for (int j=0; j<C.getColumns(); j++){
-                for (int k=0; k<this.getColumns(); k++){
-                    C.data[i][j] += this.data[i][k] * B.data[k][j];
-                }
-            }
+        double[] values = new double[getColumns()];
+        for(int j=0; j < getColumns(); j++)
+        {
+            values[j] = data.get(row, j)[0];
         }
-        return C;
-    }
-
-    /**
-     * Subtract the values of B from this matrix row-wise. Columns must agree!
-     * @param B is a row-vector with same number of columns as this matrix
-     * @return a new matrix subtracted B values from each row
-     */
-    public Matrix subtract(Matrix B){
-        if (this.getColumns() != B.getColumns())
-            throw new RuntimeException("Matrices columns do not agree");
-        Matrix output = new Matrix(this.data);
-        for(int i=0; i < this.getRows(); i++) {
-            for (int j = 0; j < this.getColumns(); j++) {
-                output.data[i][j] -= B.data[0][j];
-            }
-        }
-        return output;
-    }
-
-    /**
-     * Add the values of B to this matrix row-wise. Columns must agree!
-     * @param B is a row-vector with same number of columns as this matrix
-     * @return a new matrix added by B values in each row
-     */
-    public Matrix add(Matrix B){
-        if (this.getColumns() != B.getColumns())
-            throw new RuntimeException("Matrices columns do not agree");
-        Matrix output = new Matrix(this.data);
-        for(int i=0; i < this.getRows(); i++) {
-            for (int j = 0; j < this.getColumns(); j++) {
-                output.data[i][j] += B.data[0][j];
-            }
-        }
-        return output;
-    }
-
-    /**
-     * Compute the mean row-wise preserving columns
-     * @return a row-vector with the mean of the original rows for each column
-     */
-    public Matrix meanOfRowValues(){
-        Matrix mean = new Matrix(1, getColumns());
-        for(int j=0; j<getColumns(); j++){
-            for(int i=0; i<getRows(); i++){
-                mean.data[0][j] += this.data[i][j];
-            }
-            mean.data[0][j] /= getRows();
-        }
-        return mean;
-    }
-
-    /**
-     * Transpose Operation
-     * @return a matrix with transposed rows and columns
-     */
-    public Matrix transpose(){
-        Matrix T = new Matrix(this.getColumns(), this.getRows());
-        for (int i=0; i<this.getRows(); i++){
-            for (int j=0; j<this.getColumns(); j++){
-                T.data[j][i] = this.data[i][j];
-            }
-        }
-        return T;
-    }
-
-    /**
-     * Concatenate row at the end
-     * @param value used to fill the new row elements
-     * @return a matrix with an additional row filled with the specified value
-     */
-    public Matrix addRow(double value){
-        Matrix H = new Matrix(this.getRows()+1, this.getColumns(), value);
-        for (int i=0; i<this.getRows(); i++){
-            for (int j=0; j<this.getColumns(); j++){
-                H.data[i][j] = this.data[i][j];
-            }
-        }
-        return H;
-    }
-
-    /**
-     * Remove row at the end
-     * @return a matrix without the original last row
-     */
-    public Matrix popRow(){
-        Matrix H = new Matrix(this.getRows()-1, this.getColumns());
-        for (int i=0; i<this.getRows()-1; i++){
-            for (int j=0; j<this.getColumns(); j++){
-                H.data[i][j] = this.data[i][j];
-            }
-        }
-        return H;
+        return values;
     }
 
     /**
@@ -222,7 +119,7 @@ public class Matrix {
         StringBuilder text = new StringBuilder();
         for(int i = 0; i < getRows(); i++) {
             for(int j = 0; j < getColumns(); j++) {
-                text.append(data[i][j]);
+                text.append(data.get(i, j)[0]);
                 if (j < getColumns()-1)
                     text.append(" ");
             }
@@ -231,4 +128,52 @@ public class Matrix {
         return text.toString();
     }
 
+    /**
+     * Align the Point Cloud (data) according to the largest eigenvectors.
+     * The largest aligns with y-axis, the second largest aligns with x-axis and last with the z-axis.
+     * @param flipUpsideDown reverse eigenvector sign.
+     * @return the transformed Point Cloud
+     */
+    public Matrix rotate(boolean flipUpsideDown) {
+        double sign = (flipUpsideDown ? -1.0 : 1.0);
+        // centroid is 1x3 matrix of mean values in x,y,z
+        Mat centroid = new Mat();
+        // left eigenvectors is 3x3 matrix sorted in descending order
+        Mat eigenvectors = new Mat();
+        // eigenvalues is 3x1 vector sorted in descending order
+        Mat eigenvalues = new Mat();
+        Core.PCACompute2(data, centroid, eigenvectors, eigenvalues);
+        double[] eigenvectorsData = new double[(int) (eigenvectors.total() * eigenvectors.channels())];
+        double[] eigenvaluesData = new double[(int) (eigenvalues.total() * eigenvalues.channels())];
+        double[] centroidData = new double[(int) (centroid.total() * centroid.channels())];
+        eigenvectors.get(0, 0, eigenvectorsData);
+        eigenvalues.get(0, 0, eigenvaluesData);
+        centroid.get(0, 0, centroidData);
+
+        //rotation matrix has shape of 3x3 assembled as follows:
+        Mat rotation = new Mat(3, 3, CV_64FC1);
+        //- first column corresponds to the 2nd largest eigenvector to align with the x-axis
+        //- second column corresponds to the largest eigenvector to align with the y-axis
+        //- third column corresponds to the smallest eigenvector to align with the z-axis
+        for(int j=0; j < eigenvectors.cols(); j++){
+            rotation.put(j, 0, eigenvectors.get(1, j)[0]);
+            rotation.put(j, 1, sign * eigenvectors.get(0, j)[0]);
+            rotation.put(j, 2, eigenvectors.get(2, j)[0]);
+        }
+        double[] rotationData = new double[(int) (rotation.total() * rotation.channels())];
+        Mat normalizedPointCloud = new Mat(this.getRows(), this.getColumns(), CV_64FC1);
+        Mat rotatedPointCloudT = new Mat(this.getColumns(), this.getRows(), CV_64FC1);
+        Mat alignedPointCloud = new Mat(this.getRows(), this.getColumns(), CV_64FC1);
+        for(int i=0; i < getRows(); i++) {
+            Core.subtract(data.row(i), centroid, normalizedPointCloud.row(i));
+        }
+        Core.gemm(rotation.inv(), normalizedPointCloud.t(), 1, new Mat(), 0, rotatedPointCloudT);
+        Mat rotatedPointCloud = rotatedPointCloudT.t();
+        for(int i=0; i < getRows(); i++) {
+            Core.add(rotatedPointCloud.row(i), centroid, alignedPointCloud.row(i));
+        }
+        Matrix output = new Matrix(getRows(), getColumns());
+        alignedPointCloud.copyTo(output.data);
+        return output;
+    }
 }

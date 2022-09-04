@@ -1,6 +1,8 @@
 package com.vercator;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Read and write a point cloud to a text file
@@ -13,8 +15,8 @@ public final class MatrixFile {
      * @return a matrix
      * @throws FileNotFoundException when attempting to open a non-existing file
      */
-    public static Matrix readFile(String filename) throws FileNotFoundException {
-        return new Matrix(new BufferedReader(new FileReader(new File(filename))).lines().toList());
+    public static Matrix readFile(String filename) throws IOException {
+        return new Matrix(Files.readAllLines(Paths.get(filename)));
     }
 
 

@@ -1,12 +1,18 @@
 package com.vercator;
 
+import nu.pattern.OpenCV;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 
 class MatrixFileTest {
+    @BeforeAll
+    static void setUp() {
+        OpenCV.loadLocally();
+    }
 
     @Test
     void readPointCloudFromStringTest() {
