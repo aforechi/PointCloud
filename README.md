@@ -44,17 +44,16 @@ For more details please find the Javadoc generated files [here](doc/index.html).
 
 ## Usage
 
-- Compile:
+- Test:
 ```
-cd ./PointCloud/src/main/java/com/vercator
-javac *.java
+cd ./PointCloud
+mvn clean test
 ```
 
 - Run:
 ```
 cd ./PointCloud/
-mvn exec:java -Dexec.mainClass="com.vercator.Main" --input ./data/armadillo.xyz --output ./data/armadillo_rz_45.xyz --angles 0 0 -45
-java -cp src/main/java com.vercator.Main --input ./data/armadillo.xyz --output ./data/armadillo_rz_45.xyz --angles 0 0 -45
+mvn exec:java -Dexec.mainClass="com.vercator.Main" -Dexec.args="--input ./data/armadillo.xyz --output ./data/output.xyz"
 ```
 
 

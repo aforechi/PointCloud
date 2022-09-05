@@ -6,7 +6,7 @@
 
     <groupId>com.vercator</groupId>
     <artifactId>PointCloud</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -17,17 +17,13 @@
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.22.2</version>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.3.2</version>
-            <configuration>
-                <header>
-                    <![CDATA[
-							<span class="logo-white">finMath</span><span class="logo-red"> lib</span> documentation
-							<script type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-							</script>
-  				   			]]>
-                </header>
-            </configuration>
             <executions>
                 <execution>
                     <id>attach-javadocs</id>
