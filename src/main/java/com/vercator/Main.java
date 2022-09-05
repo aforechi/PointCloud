@@ -1,7 +1,6 @@
 package com.vercator;
 
 import nu.pattern.OpenCV;
-import org.opencv.core.Core;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +17,7 @@ public class Main {
     static String inputFile;
     static String outputFile;
     static final Map<String, List<String>> params = new HashMap<>();
-    static final String USAGE_MESSAGE = "\n --input ./data/armadillo.xyz --output ./data/armadillo_out.xyz --flip 0";
+    static final String USAGE_MESSAGE = "\n --input ./data/armadillo.xyz --output ./data/output.xyz";
 
     /**
      * TODO: Create a Java Applet for the user (Product Owner)
@@ -34,12 +33,9 @@ public class Main {
         parseCommandLineArguments(args);
         try {
             Matrix pointCloudInput = MatrixFile.readFile(inputFile);
-            Matrix pointCloudOutput = pointCloudInput.rotate(flipUpsideDown);
+            Matrix pointCloudOutput = pointCloudInput.alignPointCloudAlongVerticalAxis(flipUpsideDown);
             MatrixFile.writeFile(outputFile, pointCloudOutput);
             System.out.println("Point Cloud was successfully written to the specified file.");
-        }
-        catch (FileNotFoundException e) {
-            System.err.println("Failed to load Point Cloud from the specified file.");
         }
         catch (IOException e) {
             System.err.println("Failed to save Point Cloud to the specified file.");
@@ -47,7 +43,8 @@ public class Main {
     }
 
     /**
-     * Parse command line arguments to extract the rotation angles, the input and output filenames.
+     * Parse command line arguments to extract the input and output filenames.
+     * Optionally, you can choose to flip the point cloud upside down by passing --flip 1.
      * @param args is command line arguments
      * @throws RuntimeException when the arguments are not correctly fulfilled
      */

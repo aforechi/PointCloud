@@ -41,7 +41,7 @@ class MatrixTransformTest {
 
         Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
 
-        Matrix output = mat1.rotate(true);
+        Matrix output = mat1.alignPointCloudAlongVerticalAxis(true);
         for(int i = 0; i < mat1.getRows(); i++) {
             Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
@@ -72,7 +72,7 @@ class MatrixTransformTest {
 
         Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
 
-        Matrix output = mat1.rotate(false);
+        Matrix output = mat1.alignPointCloudAlongVerticalAxis(false);
         for(int i = 0; i < mat1.getRows(); i++) {
             Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }

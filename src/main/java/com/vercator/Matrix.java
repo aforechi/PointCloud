@@ -134,7 +134,7 @@ public class Matrix {
      * @param flipUpsideDown reverse eigenvector sign.
      * @return the transformed Point Cloud
      */
-    public Matrix rotate(boolean flipUpsideDown) {
+    public Matrix alignPointCloudAlongVerticalAxis(boolean flipUpsideDown) {
         double sign = (flipUpsideDown ? -1.0 : 1.0);
         // centroid is 1x3 matrix of mean values in x,y,z
         Mat centroid = new Mat();
@@ -143,13 +143,14 @@ public class Matrix {
         // eigenvalues is 3x1 vector sorted in descending order
         Mat eigenvalues = new Mat();
         Core.PCACompute2(data, centroid, eigenvectors, eigenvalues);
+        /**
         double[] eigenvectorsData = new double[(int) (eigenvectors.total() * eigenvectors.channels())];
         double[] eigenvaluesData = new double[(int) (eigenvalues.total() * eigenvalues.channels())];
         double[] centroidData = new double[(int) (centroid.total() * centroid.channels())];
         eigenvectors.get(0, 0, eigenvectorsData);
         eigenvalues.get(0, 0, eigenvaluesData);
         centroid.get(0, 0, centroidData);
-
+        **/
         //rotation matrix has shape of 3x3 assembled as follows:
         Mat rotation = new Mat(3, 3, CV_64FC1);
         //- first column corresponds to the 2nd largest eigenvector to align with the x-axis
@@ -160,18 +161,20 @@ public class Matrix {
             rotation.put(j, 1, sign * eigenvectors.get(0, j)[0]);
             rotation.put(j, 2, eigenvectors.get(2, j)[0]);
         }
-        double[] rotationData = new double[(int) (rotation.total() * rotation.channels())];
+
         Mat normalizedPointCloud = new Mat(this.getRows(), this.getColumns(), CV_64FC1);
         Mat rotatedPointCloudT = new Mat(this.getColumns(), this.getRows(), CV_64FC1);
-        Mat alignedPointCloud = new Mat(this.getRows(), this.getColumns(), CV_64FC1);
         for(int i=0; i < getRows(); i++) {
             Core.subtract(data.row(i), centroid, normalizedPointCloud.row(i));
         }
         Core.gemm(rotation.inv(), normalizedPointCloud.t(), 1, new Mat(), 0, rotatedPointCloudT);
+
         Mat rotatedPointCloud = rotatedPointCloudT.t();
+        Mat alignedPointCloud = new Mat(this.getRows(), this.getColumns(), CV_64FC1);
         for(int i=0; i < getRows(); i++) {
             Core.add(rotatedPointCloud.row(i), centroid, alignedPointCloud.row(i));
         }
+
         Matrix output = new Matrix(getRows(), getColumns());
         alignedPointCloud.copyTo(output.data);
         return output;
