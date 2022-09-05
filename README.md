@@ -56,6 +56,11 @@ cd ./PointCloud/
 mvn exec:java -Dexec.mainClass="com.vercator.Main" -Dexec.args="--input ./data/armadillo.xyz --output ./data/output.xyz"
 ```
 
+- Build/Test/Docs:
+```
+cd ./PointCloud/
+mvn install
+```
 
 ## Conclusion and Future Works
 

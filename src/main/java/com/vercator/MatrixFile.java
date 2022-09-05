@@ -5,9 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Read and write a point cloud to a text file
+ * Read and write a point cloud to text files
  */
-public final class MatrixFile {
+final class MatrixFile {
 
     /**
      * Read CSV file format using blank spaces instead of commas

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Main Program Class
  */
-public class Main {
+class Main {
     static boolean flipUpsideDown;
     static String inputFile;
     static String outputFile;
