@@ -4,7 +4,7 @@ This project is submitted as part of the application process for the Point Cloud
 
 - Deadline: September 1st, 2022
 - Submitted: August 28th, 2022
-- Extension: September 6th, 2022
+- Extension: September 5th, 2022
 
 The goal of this test is to assess your technical skills, structuring projects and writing good code. You can take your time to do the test and then return the answers by email.
 
