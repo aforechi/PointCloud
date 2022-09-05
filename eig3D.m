@@ -10,7 +10,7 @@ c = mean(P);
 Pc = P-c;
 C = cov(Pc);
 
-% V rows are the right eigenvector sorted by 
+% V columns are the right eigenvector sorted by 
 % their corresponding eigenvalues D
 [V, D] = eig(C);
 d = sqrt(diag(D));

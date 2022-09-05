@@ -18,7 +18,7 @@ class MatrixTransformTest {
 
     @Test
     void alignArmadilloTest() throws IOException {
-        List<String> file1 = Files.readAllLines(Paths.get("./data/armadillo_up.xyz"));
+        List<String> file1 = Files.readAllLines(Paths.get("./data/armadillo.xyz"));
         List<String> file2 = Files.readAllLines(Paths.get("./data/armadillo_up.xyz"));
 
         Matrix mat1 = new Matrix(file1);
@@ -26,8 +26,9 @@ class MatrixTransformTest {
 
         Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
 
+        Matrix output = mat1.alignPointCloudAlongVerticalAxis(false);
         for(int i = 0; i < mat1.getRows(); i++) {
-            Assertions.assertArrayEquals(mat1.getRowVector(i), mat2.getRowVector(i));
+            Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
     }
 
@@ -49,7 +50,7 @@ class MatrixTransformTest {
 
     @Test
     void alignHumanTest() throws IOException {
-        List<String> file1 = Files.readAllLines(Paths.get("./data/human_up.xyz"));
+        List<String> file1 = Files.readAllLines(Paths.get("./data/human.xyz"));
         List<String> file2 = Files.readAllLines(Paths.get("./data/human_up.xyz"));
 
         Matrix mat1 = new Matrix(file1);
@@ -57,8 +58,9 @@ class MatrixTransformTest {
 
         Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
 
+        Matrix output = mat1.alignPointCloudAlongVerticalAxis(false);
         for(int i = 0; i < mat1.getRows(); i++) {
-            Assertions.assertArrayEquals(mat1.getRowVector(i), mat2.getRowVector(i));
+            Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
     }
 

@@ -1,9 +1,9 @@
 clear all;
 close all;
 
-%P = readmatrix('./data/armadillo.xyz', 'FileType', 'text', 'Delimiter',' ');
+P = readmatrix('./data/armadillo.xyz', 'FileType', 'text', 'Delimiter',' ');
 %P = readmatrix('./data/airplane.xyz', 'FileType', 'text', 'Delimiter',' ');
-P = readmatrix('./data/guitar.xyz', 'FileType', 'text', 'Delimiter',' ');
+%P = readmatrix('./data/guitar.xyz', 'FileType', 'text', 'Delimiter',' ');
 %P = readmatrix('./data/human.xyz', 'FileType', 'text', 'Delimiter',' ');
 
 c = mean(P);
@@ -20,9 +20,8 @@ R(:,1) = W(:,2);
 R(:,2) = W(:,1);
 R(:,3) = W(:,3);
 
-% flip vertically (except for guitar)
-%R(:,2) = -R(:,2);
-
+% uncomment to flip airplane vertically
+% R(:,2) = -R(:,2);
 
 % align the point cloud w.r.t. the eigenvectors
 X = (inv(R) * Pc')' + c;
@@ -34,7 +33,7 @@ xlabel('x'); ylabel('y'); zlabel('z')
 view(0,89)
 title({'PCA highest eigenvalue along y-axis','2nd highest eigenvalue along x-axis'})
 
-%writematrix(X,'./data/armadillo_up.xyz', 'FileType', 'text', 'Delimiter',' ');
+writematrix(X,'./data/armadillo_up.xyz', 'FileType', 'text', 'Delimiter',' ');
 %writematrix(X,'./data/airplane_up.xyz', 'FileType', 'text', 'Delimiter',' ');
-writematrix(X,'./data/guitar_up.xyz', 'FileType', 'text', 'Delimiter',' ');
+%writematrix(X,'./data/guitar_up.xyz', 'FileType', 'text', 'Delimiter',' ');
 %writematrix(X,'./data/human_up.xyz', 'FileType', 'text', 'Delimiter',' ');

@@ -131,26 +131,21 @@ public class Matrix {
     /**
      * Align the Point Cloud (data) according to the largest eigenvectors.
      * The largest aligns with y-axis, the second largest aligns with x-axis and last with the z-axis.
-     * @param flipUpsideDown reverse eigenvector sign.
+     * @param flipUpsideDown reverse the largest eigenvector sign.
      * @return the transformed Point Cloud
      */
     public Matrix alignPointCloudAlongVerticalAxis(boolean flipUpsideDown) {
         double sign = (flipUpsideDown ? -1.0 : 1.0);
+
         // centroid is 1x3 matrix of mean values in x,y,z
         Mat centroid = new Mat();
         // left eigenvectors is 3x3 matrix sorted in descending order
         Mat eigenvectors = new Mat();
         // eigenvalues is 3x1 vector sorted in descending order
         Mat eigenvalues = new Mat();
+
         Core.PCACompute2(data, centroid, eigenvectors, eigenvalues);
-        /**
-        double[] eigenvectorsData = new double[(int) (eigenvectors.total() * eigenvectors.channels())];
-        double[] eigenvaluesData = new double[(int) (eigenvalues.total() * eigenvalues.channels())];
-        double[] centroidData = new double[(int) (centroid.total() * centroid.channels())];
-        eigenvectors.get(0, 0, eigenvectorsData);
-        eigenvalues.get(0, 0, eigenvaluesData);
-        centroid.get(0, 0, centroidData);
-        **/
+
         //rotation matrix has shape of 3x3 assembled as follows:
         Mat rotation = new Mat(3, 3, CV_64FC1);
         //- first column corresponds to the 2nd largest eigenvector to align with the x-axis
