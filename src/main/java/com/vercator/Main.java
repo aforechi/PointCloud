@@ -115,6 +115,13 @@ public class Main {
         new Main("Point Cloud Align Tool");
     }
 
+    /**
+     * The alignPointCloud function does:
+     *  - Load a point cloud file with containing one 3D point per line. Each point is represented by x y z coordinates separated by spaces
+     *  - Remove the current rotation, so the vertical axis of its body is aligned with the Y axis.
+     *  - Create a new XYZ file with the transformed point cloud.
+     *  The resulting point cloud should be in the same location in space.
+     */
     private void alignPointCloud() {
         try {
             Matrix pointCloudInput = MatrixFile.readFile(inputText.getText());
