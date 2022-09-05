@@ -4,6 +4,7 @@ This project is submitted as part of the application process for the Point Cloud
 
 - Deadline: September 1st, 2022
 - Submitted: August 28th, 2022
+- Extension: September 6th, 2022
 
 The goal of this test is to assess your technical skills, structuring projects and writing good code. You can take your time to do the test and then return the answers by email.
 
@@ -26,15 +27,15 @@ Please provide the Java code used to solve the proposed problem and relevant uni
 
 A point cloud is set of 3D points in Cartesian coordinates for representing geometrical properties of objects. Another interesting definition is ["Point clouds are a means of collating a large number of single spatial measurements into a dataset that can then represent a whole"](https://info.vercator.com/blog/what-are-point-clouds-5-easy-facts-that-explain-point-clouds).
 
-Point clouds are a common map representation employed to store information about large site surveys, frequently using LIDAR sensors, such as in city-scale surveys for [Autonomous Vehicles](http://www.lcad.inf.ufes.br/wiki/index.php/IARA). In such scenarios, the increasing volume of information requires high performance libraries in order to manipulate the 3D data efficiently and accurately. Some examples are: [PCL](https://pointclouds.org), [GSL](https://www.gnu.org/software/gsl/), [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page), [Alglib](https://www.alglib.net) in C++; [numpy](https://numpy.org) in Python and [JAMA](https://math.nist.gov/javanumerics/jama/) in Java to cite a few.
+Point clouds are a common [map representation](https://link.springer.com/chapter/10.1007/978-3-030-91699-2_11) employed to store information about large site surveys, frequently using LIDAR sensors, such as in city-scale surveys for [Autonomous Vehicles](http://www.lcad.inf.ufes.br/wiki/index.php/IARA). In such scenarios, the increasing volume of information requires high performance libraries in order to manipulate the 3D data efficiently and accurately. Some examples are: [PCL](https://pointclouds.org), [GSL](https://www.gnu.org/software/gsl/), [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page), [Alglib](https://www.alglib.net) in C++; [numpy](https://numpy.org) in Python and [JAMA](https://math.nist.gov/javanumerics/jama/) in Java to cite a few.
 
-Considering this project is defined in the assignment test as a PoC I have decided to implement a tailored-specific Matrix class with the minimum necessary operations to this task as it is common practice in [homework assignments](https://github.com/aforechi/ifes-alg-2018-1/blob/master/trabalho.ipynb). The design of the [Matrix.java](src/main/java/com/vercator/Matrix.java) follows the best practices of Object-Oriented Programming and can be easily replaced in the future.
+Considering this project is a PoC requested by the Product Owner (PO) I have redesigned it as GUI [Java App](src/main/java/com/vercator/Main.java) in order to improve the user experience for the PO, including the automatic point cloud alignment feature. As this feature requires more advanced Linear Algebra methods I have done a major refactoring and wrapped the class [Matrix.java](src/main/java/com/vercator/Matrix.java) with bindings to [OpenCV library](https://docs.opencv.org/4.5.1/index.html).
 
-I decided to define the I/O functions in a separate utility class [MatrixFile.java](src/main/java/com/vercator/MatrixFile.java) for clarity and organization. This helps in setting up the unit tests for Matrix and MatrixFile (see [MatrixFileTest.java](src/test/java/com/vercator/MatrixFileTest.java)) in a way that point cloud data could be generated in-memory and not required creating temporary files. There is a unit test class [MatrixTransformTest.java](src/test/java/com/vercator/MatrixTransformTest.java) for matrix transformations as well.
+I decided to define the I/O functions in a separate utility class [MatrixFile.java](src/main/java/com/vercator/MatrixFile.java) for clarity and organization. This helps in setting up the unit tests for Matrix and MatrixFile (see [MatrixFileTest.java](src/test/java/com/vercator/MatrixFileTest.java)) in a way that the point cloud data could be generated in-memory and does not require creating temporary files. There is a unit test class [MatrixTransformTest.java](src/test/java/com/vercator/MatrixTransformTest.java) for matrix transformations as well.
 
-Now, the transformations required for Point Cloud manipulation for this test are a combination of 3D rotation matrices around the x-y-z axis. Considering the combinations of transformations can vary according to the object position and orientation in the Point Cloud I have chosen the [Pipeline Design Pattern](https://java-design-patterns.com/patterns/pipeline/) for representing the pipeline of transformation in class [MatrixTransform.java](src/main/java/com/vercator/MatrixTransform.java) according to user needs specified by command line arguments in class [Main.java](src/main/java/com/vercator/Main.java).
+Now, the transformation required for the Point Cloud alignment in this test is solved with the Principal Component Analysis (PCA). In the PCA method, the eigenvalues encodes the variance of points scattered in 3D and their corresponding eigenvectors represent the orientation. Once the eigenvectors associated with the highest eigenvalues were determined, the eigenvectors can be assembled column-wise to form a rotation matrix to carry out the transformation implemented in the alignPointCloudAlongVerticalAxis method of class [Matrix.java](src/main/java/com/vercator/Matrix.java).
 
-For more details please find the Javadoc generated files [here](doc/index.html).
+For more details please find the Javadoc generated files [here](target/apidocs/index.html).
 
 ## Software Requirements
 - Java 10
@@ -44,19 +45,29 @@ For more details please find the Javadoc generated files [here](doc/index.html).
 
 ## Usage
 
+- Compile:
+```
+cd ./PointCloud/
+mvn package
+```
+
+- Run:
+```
+cd ./PointCloud/
+java -jar target/PointCloud-2.0-jar-with-dependencies.jar
+```
+or, alternatively
+```
+mvn exec:java -Dexec.mainClass="com.vercator.Main" 
+```
+
 - Test:
 ```
 cd ./PointCloud
 mvn clean test
 ```
 
-- Run:
-```
-cd ./PointCloud/
-mvn exec:java -Dexec.mainClass="com.vercator.Main" -Dexec.args="--input ./data/armadillo.xyz --output ./data/output.xyz"
-```
-
-- Build/Test/Docs:
+- Docs:
 ```
 cd ./PointCloud/
 mvn install
@@ -64,15 +75,13 @@ mvn install
 
 ## Conclusion and Future Works
 
-This project has demonstrated the capability of reading a point cloud to memory in order to rotate around x-y-z axis by pre-defined angle in degree for latter writing the resulting point cloud to disk. 
+This project has demonstrated the capability of reading a point cloud to memory in order to align the vertical body along with the y-axis and latter writing the resulting point cloud to disk without changing the body position in space. 
 
-This project could be employed in conjunction with another project that detects objects in point clouds and automatically determine the rotation of the body w.r.t. the vertical axis y. The segmentation of point clouds could be investigated using Deep Learning algorithms and the orientation angle of the object could be determined by Principal Component Analysis (PCA).
+In the future, this project could be employed in conjunction with Machine Learning classification methods to detect objects in point clouds and help disambiguate the eigenvector direction based on the object type ([Airplane](./data/airplane.xyz), [Pearson](./data/human.xyz), [Guitar](./data/guitar.xyz)). This is specially relevant because eigenvectors computed by PCA are not uniquely defined due to [sign ambiguity](https://www.osti.gov/servlets/purl/920802).
 
-In the PCA method, the biggest eigenvector aligns with the axis where the points are widely spread. There are many applications of this technique in Computer Vision, but cite one that might be relevant for removing pedestrian trace from point cloud data I would suggest reading this [paper](http://www.ijmerr.com/uploadfile/2020/0417/20200417064018858.pdf). Eigenvectors computed by PCA are not uniquely defined due to sign ambiguity. PCA supports fast ad-hoc “sign flip” technique described in the paper [Bro07](https://www.osti.gov/servlets/purl/920802).
-
-This project has demonstrated the relevance of linear algebra for solving real world problems and the importance of OO Programming and Design Patterns towards the motto "Coding for Humanity" as my former advisor used to say.
+This project has demonstrated the relevance of linear algebra for solving real world problems and the importance of OO Programming and Agile best practices, such as Unit Testing and Refactoring.
 
 
 ## Acknowledgments
 
-I would like to greatly thank Correvate for this opportunity and Vanhack for being so supportive.
+I would like to thank Correvate for this opportunity and Vanhack for being so supportive.
