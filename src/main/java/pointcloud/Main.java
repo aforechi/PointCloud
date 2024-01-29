@@ -1,4 +1,4 @@
-package com.vercator;
+package pointcloud;
 
 import nu.pattern.OpenCV;
 
@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
 
 /**
  * Main App Class
@@ -30,6 +29,7 @@ public class Main {
 
     /**
      * Main App constructor
+     * 
      * @param title window to display
      */
     public Main(String title) {
@@ -39,7 +39,7 @@ public class Main {
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         frame = new JFrame(title);
-        frame.getContentPane().setLayout(new GridLayout(3,3));
+        frame.getContentPane().setLayout(new GridLayout(3, 3));
 
         inputLabel = new JLabel("Input Filename:");
         frame.getContentPane().add(inputLabel);
@@ -57,7 +57,7 @@ public class Main {
                 JFileChooser file = new JFileChooser(new File(inputText.getText()));
                 file.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int option = file.showOpenDialog(null);
-                if (option==JFileChooser.APPROVE_OPTION){
+                if (option == JFileChooser.APPROVE_OPTION) {
                     inputText.setText(file.getSelectedFile().getAbsolutePath());
                 }
             }
@@ -80,7 +80,7 @@ public class Main {
                 JFileChooser file = new JFileChooser(new File(outputText.getText()));
                 file.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int option = file.showOpenDialog(null);
-                if (option==JFileChooser.APPROVE_OPTION){
+                if (option == JFileChooser.APPROVE_OPTION) {
                     outputText.setText(file.getSelectedFile().getAbsolutePath());
                 }
             }
@@ -108,6 +108,7 @@ public class Main {
 
     /**
      * main function loads OpenCV lib and open main window
+     * 
      * @param args are not used
      */
     public static void main(String[] args) {
@@ -117,10 +118,12 @@ public class Main {
 
     /**
      * The alignPointCloud function does:
-     *  - Load a point cloud file with containing one 3D point per line. Each point is represented by x y z coordinates separated by spaces
-     *  - Remove the current rotation, so the vertical axis of its body is aligned with the Y axis.
-     *  - Create a new XYZ file with the transformed point cloud.
-     *  The resulting point cloud should be in the same location in space.
+     * - Load a point cloud file with containing one 3D point per line. Each point
+     * is represented by x y z coordinates separated by spaces
+     * - Remove the current rotation, so the vertical axis of its body is aligned
+     * with the Y axis.
+     * - Create a new XYZ file with the transformed point cloud.
+     * The resulting point cloud should be in the same location in space.
      */
     private void alignPointCloud() {
         try {
@@ -128,8 +131,7 @@ public class Main {
             Matrix pointCloudOutput = pointCloudInput.alignPointCloudAlongVerticalAxis(flipCheckbox.isSelected());
             MatrixFile.writeFile(outputText.getText(), pointCloudOutput);
             System.out.println("Point Cloud was successfully written to the specified file.");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Failed to save Point Cloud to the specified file.");
         }
     }

@@ -1,4 +1,4 @@
-package com.vercator;
+package pointcloud;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,6 +11,7 @@ final class MatrixFile {
 
     /**
      * Read CSV file format using blank spaces instead of commas
+     * 
      * @param filename path and name of input file
      * @return a matrix
      * @throws FileNotFoundException when attempting to open a non-existing file
@@ -19,10 +20,11 @@ final class MatrixFile {
         return new Matrix(Files.readAllLines(Paths.get(filename)));
     }
 
-
     /**
-     * Write a list of points to a text file using the CSV file format with a blank space instead of a comma
-     * @param filename path and name of the output file
+     * Write a list of points to a text file using the CSV file format with a blank
+     * space instead of a comma
+     * 
+     * @param filename   path and name of the output file
      * @param pointCloud list of points
      * @throws IOException when fails to write a file
      */

@@ -1,6 +1,7 @@
-package com.vercator;
+package pointcloud;
 
 import nu.pattern.OpenCV;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,10 @@ class MatrixTransformTest {
         Matrix mat1 = new Matrix(file1);
         Matrix mat2 = new Matrix(file2);
 
-        Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
+        Assertions.assertEquals(mat1.getRows() * mat1.getColumns(), mat2.getRows() * mat2.getColumns());
 
         Matrix output = mat1.alignPointCloudAlongVerticalAxis(false);
-        for(int i = 0; i < mat1.getRows(); i++) {
+        for (int i = 0; i < mat1.getRows(); i++) {
             Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
     }
@@ -40,10 +41,10 @@ class MatrixTransformTest {
         Matrix mat1 = new Matrix(file1);
         Matrix mat2 = new Matrix(file2);
 
-        Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
+        Assertions.assertEquals(mat1.getRows() * mat1.getColumns(), mat2.getRows() * mat2.getColumns());
 
         Matrix output = mat1.alignPointCloudAlongVerticalAxis(true);
-        for(int i = 0; i < mat1.getRows(); i++) {
+        for (int i = 0; i < mat1.getRows(); i++) {
             Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
     }
@@ -56,10 +57,10 @@ class MatrixTransformTest {
         Matrix mat1 = new Matrix(file1);
         Matrix mat2 = new Matrix(file2);
 
-        Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
+        Assertions.assertEquals(mat1.getRows() * mat1.getColumns(), mat2.getRows() * mat2.getColumns());
 
         Matrix output = mat1.alignPointCloudAlongVerticalAxis(false);
-        for(int i = 0; i < mat1.getRows(); i++) {
+        for (int i = 0; i < mat1.getRows(); i++) {
             Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
     }
@@ -72,10 +73,10 @@ class MatrixTransformTest {
         Matrix mat1 = new Matrix(file1);
         Matrix mat2 = new Matrix(file2);
 
-        Assertions.assertEquals(mat1.getRows()*mat1.getColumns(), mat2.getRows()*mat2.getColumns());
+        Assertions.assertEquals(mat1.getRows() * mat1.getColumns(), mat2.getRows() * mat2.getColumns());
 
         Matrix output = mat1.alignPointCloudAlongVerticalAxis(false);
-        for(int i = 0; i < mat1.getRows(); i++) {
+        for (int i = 0; i < mat1.getRows(); i++) {
             Assertions.assertArrayEquals(output.getRowVector(i), mat2.getRowVector(i), 1e-8);
         }
     }

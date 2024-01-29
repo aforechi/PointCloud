@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.vercator</groupId>
+    <groupId>pointcloud</groupId>
     <artifactId>PointCloud</artifactId>
     <version>2.0</version>
 
@@ -43,7 +43,7 @@
                 </descriptorRefs>
                 <archive>
                     <manifest>
-                        <mainClass>com.vercator.Main</mainClass>
+                        <mainClass>pointcloud.Main</mainClass>
                     </manifest>
                 </archive>
             </configuration>
